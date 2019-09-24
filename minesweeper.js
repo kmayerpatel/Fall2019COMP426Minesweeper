@@ -3,6 +3,16 @@ $(document).ready(() => {
     $("#widthSlider").on('input', () => {updateBombSlider();});
     $("#heightSlider").on('input', () => {updateBombSlider();});
     $("#bombSlider").on('input', () => {updateBombSlider();});
+
+    let minefield = null;
+    
+    $("#startGame").on('click', () => {
+	minefield = new Minefield($("#widthSlider").val(),
+				  $("#heightSlider").val(),
+				  $("#bombSlider").val());
+	$("#minefield").empty().html("<pre>" + minefield.toString() + "</pre>");
+    });
+    
 });
 
 let updateBombSlider = () => {
