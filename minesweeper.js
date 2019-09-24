@@ -37,7 +37,7 @@ $(document).ready(() => {
     $("#minefield").on('click', 'div.spot', null, (e) => {
 	e.preventDefault();
 	
-	let spot_div = $(e.target);
+	let spot_div = $(e.currentTarget);
 	let spot = spot_div.data('spot');
 
 	spot_div.removeClass(spot.state);
