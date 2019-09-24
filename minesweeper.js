@@ -77,10 +77,12 @@ let setupMinefieldView = (minefield) => {
 	    let spot_div = $("<div class='spot'></div>");	    
 	    let spot = minefield.getSpot(x,y);
 	    spot_div.data('spot', spot);
+	    spot.spot_div = spot_div;
 	    
 	    spot_div.addClass(spot.state);
-
+	    
 	    if (spot.is_bomb) {
+		spot_div.addClass("bomb");
 		spot_div.append($("<span class='spot_label'>X</span>"));
 	    } else if (spot.neighborBombCount() > 0) {
 		spot_div.append($("<span class='spot_label'>" + spot.neighborBombCount() + "</span>"));

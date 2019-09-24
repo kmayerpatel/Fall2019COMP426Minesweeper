@@ -45,13 +45,23 @@ const Spot = class {
 	this.x = x;
 	this.y = y;
 	this.is_bomb = is_bomb;
-
+	this.spot_div = null;
 	this.state = Spot.State.UNMARKED;
     }
 
     reveal() {
 	if (this.state != Spot.State.MARKED) {	   
 	    this.state = Spot.State.REVEALED;
+
+	    if (this.neighborBombCount() == 0) {
+		this.neighborhood().forEach((n) => {
+		    if (n.state == Spot.State.UNMARKED) {
+			if (n.spot_div != null) {
+			    n.spot_div.trigger('click');
+			}
+		    }
+		})
+	    }
 	}
     }
 
@@ -63,20 +73,27 @@ const Spot = class {
 	}
     }
 
-    neighborBombCount() {
-	let count = 0;
-
+    neighborhood() {
+	let hood = [];
 	for (let nx=this.x-1; nx<=this.x+1; nx++) {
 	    for (let ny=this.y-1; ny<=this.y+1; ny++) {
 		if (nx != this.x || ny != this.y) {
 		    let spot = this.minefield.getSpot(nx, ny);
 		    if (spot != null) {
-			count += spot.is_bomb ? 1 : 0;
+			hood.push(spot);
 		    }
 		}
 	    }
 	}
+	return hood;
+    }
+    
+    neighborBombCount() {
+	let count = 0;
 
+	this.neighborhood().forEach((n) => {
+	    count += n.is_bomb ? 1 : 0;
+	});
 	return count;
     }		
     
