@@ -39,15 +39,15 @@
     background: green;
 }
 
-.spot.unmarked .bombspan {
+.spot.unmarked .spot_label {
     display: none;
 }
 
-.spot.marked .bombspan {
+.spot.marked .spot_label {
     display: none;
 }
 
-.spot.revealed .bombspan {
+.spot.revealed .spot_label {
     display: inline;
 }
     

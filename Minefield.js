@@ -20,6 +20,10 @@ const Minefield = class {
     }
 
     getSpot(x, y) {
+	if (x < 0 || x >= this.width || y < 0 || y > this.height) {
+	    return null;
+	}
+	
 	return this.spots[x][y];
     }
     
@@ -56,6 +60,23 @@ const Spot = class {
 	    this.state = Spot.State.MARKED;
 	}
     }
+
+    neighborBombCount() {
+	let count = 0;
+
+	for (let nx=this.x-1; nx<=this.x+1; nx++) {
+	    for (let ny=this.y-1; ny<=this.y+1; ny++) {
+		if (nx != this.x || ny != this.y) {
+		    let spot = this.minefield.getSpot(nx, ny);
+		    if (spot != null) {
+			count += spot.is_bomb ? 1 : 0;
+		    }
+		}
+	    }
+	}
+
+	return count;
+    }		
     
     toString() {
 	if (this.is_bomb) {
