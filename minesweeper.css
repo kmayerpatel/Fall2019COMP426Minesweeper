@@ -51,3 +51,14 @@
     display: inline;
 }
     
+.spot.unmarked .spot_mark {
+    display: none;
+}
+
+.spot.marked .spot_mark {
+    display: inline;
+}
+
+.spot.revealed .spot_mark {
+    display: none;
+}

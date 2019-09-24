@@ -35,11 +35,17 @@ $(document).ready(() => {
     */
     
     $("#minefield").on('click', 'div.spot', null, (e) => {
+	e.preventDefault();
+	
 	let spot_div = $(e.target);
 	let spot = spot_div.data('spot');
 
 	spot_div.removeClass(spot.state);
-	spot.reveal();
+	if (e.shiftKey) {
+	    spot.mark();
+	} else {
+	    spot.reveal();
+	}
 	spot_div.addClass(spot.state);
     });
 
@@ -79,6 +85,7 @@ let setupMinefieldView = (minefield) => {
 	    } else if (spot.neighborBombCount() > 0) {
 		spot_div.append($("<span class='spot_label'>" + spot.neighborBombCount() + "</span>"));
 	    }
+	    spot_div.append($("<span class='spot_mark'>O</span>"));
 	    
 	    row.append($("<td></td>").append(spot_div));
 	}

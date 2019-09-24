@@ -50,14 +50,16 @@ const Spot = class {
     }
 
     reveal() {
-	this.state = Spot.State.REVEALED;
+	if (this.state != Spot.State.MARKED) {	   
+	    this.state = Spot.State.REVEALED;
+	}
     }
 
-    toggleMark() {
-	if (this.state = Spot.State.MARKED) {
-	    this.state = Spot.State.UNMARKED;
-	} else if (this.state = Spot.State.UNMARKED) {
+    mark() {
+	if (this.state == Spot.State.UNMARKED) {
 	    this.state = Spot.State.MARKED;
+	} else if (this.state == Spot.State.MARKED) {
+	    this.state = Spot.State.UNMARKED;
 	}
     }
 
