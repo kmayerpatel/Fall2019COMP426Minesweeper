@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Minesweeper</title>
+
+<script
+src="http://www.cs.unc.edu/~kmp/comp426fall19/jquery-3.4.1.js"></script>
+<script src="minesweeper.js"></script>
+<link rel=stylesheet type="text/css" href="minesweeper.css">
+</head>
+
+
+<body>
+
+<div id="controls">
+
+  <div class="control">
+    <label>Width: <span id="currentWidth"></span></label><br>
+    <span>1</span><input id="widthSlider" type="range" min=1 max=30><span>30</span>
+  </div>
+
+  <div class="control">
+    <label>Height: <span id="currentHeight"></span></label><br>
+    <span>1</span><input id="heightSlider" type="range" min=1 max=30><span>30</span>
+  </div>
+
+  <div class="control">
+    <label>Number of bombs: <span id="currentBombCount"></span></label><br>
+    <span>1</span><input id="bombSlider" type="range" min=1><span id="bombSliderMax"></span>
+  </div>
+
+  <div class="control">
+    <button type="button">Start Game</button>
+  </div>
+
+</div>
+
+<div id="minefield"></div>
+
+</body>
+
+</html>
