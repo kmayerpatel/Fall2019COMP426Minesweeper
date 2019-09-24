@@ -14,7 +14,27 @@ $(document).ready(() => {
 	setupMinefieldView(minefield);
     });
 
+    /* This does not work because div.spot elements will
+       not get set up until after start is clicked so at this
+       point, there are no matching elements.
+
     $("div.spot").on('click', (e) => {
+	let spot_div = $(e.target);
+	let spot = spot_div.data('spot');
+
+	spot_div.removeClass(spot.state);
+	spot.reveal();
+	spot_div.addClass(spot.state);
+    });
+
+    */
+
+    /* This works by using jQuery event delegation. Sets
+       up handler at parent element to be automatically installed
+       on any children matching select div.spot.
+    */
+    
+    $("#minefield").on('click', 'div.spot', null, (e) => {
 	let spot_div = $(e.target);
 	let spot = spot_div.data('spot');
 
