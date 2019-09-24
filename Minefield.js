@@ -19,6 +19,10 @@ const Minefield = class {
 	}
     }
 
+    getSpot(x, y) {
+	return this.spots[x][y];
+    }
+    
     toString() {
 	let field_string = "";
 	for (let y=0; y<this.height; y++) {
@@ -41,6 +45,18 @@ const Spot = class {
 	this.state = Spot.State.UNMARKED;
     }
 
+    reveal() {
+	this.state = Spot.State.REVEALED;
+    }
+
+    toggleMark() {
+	if (this.state = Spot.State.MARKED) {
+	    this.state = Spot.State.UNMARKED;
+	} else if (this.state = Spot.State.UNMARKED) {
+	    this.state = Spot.State.MARKED;
+	}
+    }
+    
     toString() {
 	if (this.is_bomb) {
 	    return "X";
@@ -51,9 +67,9 @@ const Spot = class {
 }
 
 Spot.State = {
-    UNMARKED: 0,
-    MARKED: 1,
-    REVEALED: 2
+    UNMARKED: "unmarked",
+    MARKED: "marked",
+    REVEALED: "revealed"
 }
 
 /**
