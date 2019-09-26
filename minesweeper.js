@@ -15,10 +15,12 @@ $(document).ready(() => {
 
 	$(minefield).on('minefield:boom', () => {
 	    $("#minefield").append("<h1>You Lose!</h1>");
+	    $("div.spot").off('click');
 	});
 
 	$(minefield).on('minefield:win', () => {
 	    $("#minefield").append("<h1>You Win!</h1>");
+	    $("div.spot").off('click');
 	});
 	
     });

@@ -57,6 +57,21 @@ const Minefield = class {
     }
 
     checkForWin() {
+	if (!this.won) {
+	    this.won = this.spots.reduce((won_flag, c) => {
+		return won_flag && c.reduce((won_flag, s) => {
+		    return won_flag && !((s.is_bomb && s.state != Spot.State.MARKED) ||
+					 (!s.is_bomb && s.state != Spot.State.REVEALED));
+		}, true);
+	    }, true);
+	    
+	    if (this.won) {
+		$(this).trigger("minefield:win");
+	    }
+	}	    
+
+	/* Above replaces the non-functional approach below. 
+
 	// If we already won, no need to check again.
 	if (this.won) {
 	    return;
@@ -76,6 +91,8 @@ const Minefield = class {
 	// Won
 	this.won = true;
 	$(this).trigger("minefield:win");
+
+	*/
     }
 	
 }
