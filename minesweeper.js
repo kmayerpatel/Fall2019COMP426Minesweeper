@@ -12,6 +12,15 @@ $(document).ready(() => {
 				  $("#bombSlider").val());
 	
 	setupMinefieldView(minefield);
+
+	$(minefield).on('minefield:boom', () => {
+	    $("#minefield").append("<h1>You Lose!</h1>");
+	});
+
+	$(minefield).on('minefield:win', () => {
+	    $("#minefield").append("<h1>You Win!</h1>");
+	});
+	
     });
 
     /* This does not work because div.spot elements will
@@ -100,9 +109,10 @@ let setupMinefieldView = (minefield) => {
 	    });
 
 	    spot_div.addClass(spot.state);
-
+	    
 	    if (spot.is_bomb) {
 		spot_div.append($("<span class='spot_label'>X</span>"));
+		spot_div.addClass("is_bomb");
 	    } else if (spot.neighborBombCount() > 0) {
 		spot_div.append($("<span class='spot_label'>" + spot.neighborBombCount() + "</span>"));
 	    }

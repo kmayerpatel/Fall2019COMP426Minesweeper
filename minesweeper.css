@@ -32,11 +32,15 @@
 }
 
 .spot.marked {
-    background: red;
+    background: pink;
 }
 
 .spot.revealed {
     background: green;
+}
+
+.spot.revealed.is_bomb {
+    background: red;
 }
 
 .spot.unmarked .spot_label {

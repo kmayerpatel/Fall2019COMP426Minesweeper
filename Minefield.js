@@ -37,6 +37,47 @@ const Minefield = class {
 	}
 	return field_string;
     }
+
+    boom() {
+	// Need the following to prevent booming for each bomb
+	// when we reveal all the spots.
+	
+	if (this.booming) {
+	    return;
+	}
+	this.booming = true;
+	
+	for (let y=0; y<this.height; y++) {
+	    for (let x=0; x<this.width; x++) {
+		this.spots[x][y].reveal();
+	    }
+	}
+
+	$(this).trigger("minefield:boom");
+    }
+
+    checkForWin() {
+	// If we already won, no need to check again.
+	if (this.won) {
+	    return;
+	}
+	
+	for (let y=0; y<this.height; y++) {
+	    for (let x=0; x<this.width; x++) {
+		let s = this.spots[x][y];
+
+		if ((s.is_bomb && s.state != Spot.State.MARKED) ||
+		    (!s.is_bomb && s.state != Spot.State.REVEALED)) {
+		    // No win
+		    return;
+		}
+	    }
+	}
+	// Won
+	this.won = true;
+	$(this).trigger("minefield:win");
+    }
+	
 }
 
 const Spot = class {
@@ -56,7 +97,11 @@ const Spot = class {
 
 	    if (!this.is_bomb && this.neighborBombCount() == 0) {
 		this.neighborhood().forEach((n) => {n.reveal()});
+	    } else if (this.is_bomb) {
+		// Player just lost, reveal all spots and trigger the boom.
+		this.minefield.boom();		
 	    }
+	    this.minefield.checkForWin();
 	}
     }
 
@@ -70,6 +115,7 @@ const Spot = class {
 		this.state = Spot.State.UNMARKED;
 	    }
 	    $(this).trigger("spot:state_change", [old_state]);
+	    this.minefield.checkForWin();
 	}
     }
 
