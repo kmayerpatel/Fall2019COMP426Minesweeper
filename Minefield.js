@@ -50,20 +50,26 @@ const Spot = class {
     }
 
     reveal() {
-	if (this.state != Spot.State.MARKED) {	   
+	if (this.state == Spot.State.UNMARKED) {	   
 	    this.state = Spot.State.REVEALED;
+	    $(this).trigger("spot:state_change", [Spot.State.UNMARKED]);
 
-	    if (this.neighborBombCount() == 0) {
+	    if (!this.is_bomb && this.neighborBombCount() == 0) {
 		this.neighborhood().forEach((n) => {n.reveal()});
 	    }
 	}
     }
 
     mark() {
-	if (this.state == Spot.State.UNMARKED) {
-	    this.state = Spot.State.MARKED;
-	} else if (this.state == Spot.State.MARKED) {
-	    this.state = Spot.State.UNMARKED;
+	if (this.state != Spot.State.REVEALED) {
+	    let old_state = this.state;
+	    
+	    if (this.state == Spot.State.UNMARKED) {
+		this.state = Spot.State.MARKED;
+	    } else if (this.state == Spot.State.MARKED) {
+		this.state = Spot.State.UNMARKED;
+	    }
+	    $(this).trigger("spot:state_change", [old_state]);
 	}
     }
 
