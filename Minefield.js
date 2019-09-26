@@ -135,16 +135,7 @@ const Spot = class {
     }
     
     neighborBombCount() {
-<<<<<<< HEAD
-	let count = 0;
-
-	this.neighborhood().forEach((n) => {
-	    count += n.is_bomb ? 1 : 0;
-	});
-	return count;
-=======
 	return this.neighborhood().reduce((count, neighbor) => {return (count + ((neighbor.is_bomb) ? 1 : 0))}, 0);
->>>>>>> 09_win_and_lose
     }		
     
     toString() {
