@@ -52,6 +52,10 @@ const Spot = class {
     reveal() {
 	if (this.state != Spot.State.MARKED) {	   
 	    this.state = Spot.State.REVEALED;
+
+	    if (this.neighborBombCount() == 0) {
+		this.neighborhood().forEach((n) => {n.reveal()});
+	    }
 	}
     }
 
@@ -63,21 +67,23 @@ const Spot = class {
 	}
     }
 
-    neighborBombCount() {
-	let count = 0;
-
+    neighborhood() {
+	let hood = [];
 	for (let nx=this.x-1; nx<=this.x+1; nx++) {
 	    for (let ny=this.y-1; ny<=this.y+1; ny++) {
 		if (nx != this.x || ny != this.y) {
 		    let spot = this.minefield.getSpot(nx, ny);
 		    if (spot != null) {
-			count += spot.is_bomb ? 1 : 0;
+			hood.push(spot);
 		    }
 		}
 	    }
 	}
-
-	return count;
+	return hood;
+    }
+    
+    neighborBombCount() {
+	return this.neighborhood().reduce((count, neighbor) => {return (count + ((neighbor.is_bomb) ? 1 : 0))}, 0);
     }		
     
     toString() {
