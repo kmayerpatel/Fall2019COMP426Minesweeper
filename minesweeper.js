@@ -12,6 +12,15 @@ $(document).ready(() => {
 				  $("#bombSlider").val());
 	
 	setupMinefieldView(minefield);
+
+	$(minefield).on('minefield:boom', () => {
+	    $("#minefield").append("<h1>You Lose!</h1>");
+	});
+
+	$(minefield).on('minefield:win', () => {
+	    $("#minefield").append("<h1>You Win!</h1>");
+	});
+	
     });
 
     /* This does not work because div.spot elements will
@@ -32,7 +41,12 @@ $(document).ready(() => {
     /* This works by using jQuery event delegation. Sets
        up handler at parent element to be automatically installed
        on any children matching select div.spot.
-    */
+
+       At version 8, we took a different approach and added
+       handler to each div.spot where it was created to take 
+       advantage of closure around local variable with reference
+       to appropriate spot, avoiding having to stash reference to
+       spot in 'data' facility provided by jquery.
     
     $("#minefield").on('click', 'div.spot', null, (e) => {
 	e.preventDefault();
@@ -48,7 +62,7 @@ $(document).ready(() => {
 	}
 	spot_div.addClass(spot.state);
     });
-
+    */
 });
 
 let updateBombSlider = () => {
@@ -76,14 +90,30 @@ let setupMinefieldView = (minefield) => {
 	for (let x=0; x<minefield.width; x++) {
 	    let spot_div = $("<div class='spot'></div>");	    
 	    let spot = minefield.getSpot(x,y);
-	    spot_div.data('spot', spot);
-	    spot.spot_div = spot_div;
+
+	    /* Set up behavior of spot_div */
 	    
+	    spot_div.on('click', (e) => {
+		if (e.shiftKey) {
+		    spot.mark();
+		} else {
+		    spot.reveal();
+		}
+	    });
+
+	    /* Add spot_div as 'observer' of spot for state changes. */
+
+	    $(spot).on('spot:state_change', (e, old_state) => {
+		spot_div.removeClass(old_state);
+		spot_div.addClass(spot.state);
+	    });
+
 	    spot_div.addClass(spot.state);
 	    
 	    if (spot.is_bomb) {
 		spot_div.addClass("bomb");
 		spot_div.append($("<span class='spot_label'>X</span>"));
+		spot_div.addClass("is_bomb");
 	    } else if (spot.neighborBombCount() > 0) {
 		spot_div.append($("<span class='spot_label'>" + spot.neighborBombCount() + "</span>"));
 	    }

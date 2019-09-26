@@ -43,6 +43,10 @@
     background: red;
 }
 
+.spot.revealed.is_bomb {
+    background: red;
+}
+
 .spot.unmarked .spot_label {
     display: none;
 }

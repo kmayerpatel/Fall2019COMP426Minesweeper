@@ -37,6 +37,47 @@ const Minefield = class {
 	}
 	return field_string;
     }
+
+    boom() {
+	// Need the following to prevent booming for each bomb
+	// when we reveal all the spots.
+	
+	if (this.booming) {
+	    return;
+	}
+	this.booming = true;
+	
+	for (let y=0; y<this.height; y++) {
+	    for (let x=0; x<this.width; x++) {
+		this.spots[x][y].reveal();
+	    }
+	}
+
+	$(this).trigger("minefield:boom");
+    }
+
+    checkForWin() {
+	// If we already won, no need to check again.
+	if (this.won) {
+	    return;
+	}
+	
+	for (let y=0; y<this.height; y++) {
+	    for (let x=0; x<this.width; x++) {
+		let s = this.spots[x][y];
+
+		if ((s.is_bomb && s.state != Spot.State.MARKED) ||
+		    (!s.is_bomb && s.state != Spot.State.REVEALED)) {
+		    // No win
+		    return;
+		}
+	    }
+	}
+	// Won
+	this.won = true;
+	$(this).trigger("minefield:win");
+    }
+	
 }
 
 const Spot = class {
@@ -50,26 +91,31 @@ const Spot = class {
     }
 
     reveal() {
-	if (this.state != Spot.State.MARKED) {	   
+	if (this.state == Spot.State.UNMARKED) {	   
 	    this.state = Spot.State.REVEALED;
+	    $(this).trigger("spot:state_change", [Spot.State.UNMARKED]);
 
-	    if (this.neighborBombCount() == 0) {
-		this.neighborhood().forEach((n) => {
-		    if (n.state == Spot.State.UNMARKED) {
-			if (n.spot_div != null) {
-			    n.spot_div.trigger('click');
-			}
-		    }
-		})
+	    if (!this.is_bomb && this.neighborBombCount() == 0) {
+		this.neighborhood().forEach((n) => {n.reveal()});
+	    } else if (this.is_bomb) {
+		// Player just lost, reveal all spots and trigger the boom.
+		this.minefield.boom();		
 	    }
+	    this.minefield.checkForWin();
 	}
     }
 
     mark() {
-	if (this.state == Spot.State.UNMARKED) {
-	    this.state = Spot.State.MARKED;
-	} else if (this.state == Spot.State.MARKED) {
-	    this.state = Spot.State.UNMARKED;
+	if (this.state != Spot.State.REVEALED) {
+	    let old_state = this.state;
+	    
+	    if (this.state == Spot.State.UNMARKED) {
+		this.state = Spot.State.MARKED;
+	    } else if (this.state == Spot.State.MARKED) {
+		this.state = Spot.State.UNMARKED;
+	    }
+	    $(this).trigger("spot:state_change", [old_state]);
+	    this.minefield.checkForWin();
 	}
     }
 
@@ -89,12 +135,16 @@ const Spot = class {
     }
     
     neighborBombCount() {
+<<<<<<< HEAD
 	let count = 0;
 
 	this.neighborhood().forEach((n) => {
 	    count += n.is_bomb ? 1 : 0;
 	});
 	return count;
+=======
+	return this.neighborhood().reduce((count, neighbor) => {return (count + ((neighbor.is_bomb) ? 1 : 0))}, 0);
+>>>>>>> 09_win_and_lose
     }		
     
     toString() {
